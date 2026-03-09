@@ -29,6 +29,7 @@ import {
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { API_BASE_URL } from './config';
 
 // --- Types ---
 interface Role {
@@ -141,11 +142,11 @@ export default function App() {
   const fetchData = async () => {
     try {
       const [statsRes, rolesRes, membersRes, transRes, settingsRes] = await Promise.all([
-        fetch('/api/stats'),
-        fetch('/api/roles'),
-        fetch('/api/members'),
-        fetch('/api/transactions'),
-        fetch('/api/settings')
+        fetch(`${API_BASE_URL}/api/stats`),
+        fetch(`${API_BASE_URL}/api/roles`),
+        fetch(`${API_BASE_URL}/api/members`),
+        fetch(`${API_BASE_URL}/api/transactions`),
+        fetch(`${API_BASE_URL}/api/settings`)
       ]);
 
       setStats(await statsRes.json());
@@ -170,7 +171,7 @@ export default function App() {
 
   const handleTogglePayment = async (memberId: number) => {
     const now = new Date();
-    await fetch('/api/payments/toggle', {
+    await fetch(`${API_BASE_URL}/api/payments/toggle`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -245,7 +246,7 @@ export default function App() {
       date: new Date().toISOString()
     };
 
-    await fetch('/api/transactions', {
+    await fetch(`${API_BASE_URL}/api/transactions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -261,7 +262,7 @@ export default function App() {
       const reader = new FileReader();
       reader.onloadend = async () => {
         const base64String = reader.result as string;
-        await fetch('/api/settings', {
+        await fetch(`${API_BASE_URL}/api/settings`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ key: 'qr_image', value: base64String })
@@ -273,7 +274,7 @@ export default function App() {
   };
 
   const handleUpdateThreshold = async (val: string) => {
-    await fetch('/api/settings', {
+    await fetch(`${API_BASE_URL}/api/settings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key: 'low_balance_threshold', value: val })
@@ -575,7 +576,7 @@ Trân trọng cảm ơn.`;
                     <button onClick={() => { const link = document.createElement('a'); link.href = settings.qr_image; link.download = 'payment-qr.png'; link.click(); }} className="flex items-center gap-2 text-slate-600 hover:text-indigo-600 font-bold transition-colors">
                       <Download size={18} /> Tải xuống
                     </button>
-                    <button onClick={async () => { if(confirm('Xóa mã QR?')) { await fetch('/api/settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({key: 'qr_image', value: ''}) }); fetchData(); } }} className="flex items-center gap-2 text-slate-600 hover:text-rose-600 font-bold transition-colors">
+                    <button onClick={async () => { if(confirm('Xóa mã QR?')) { await fetch(`${API_BASE_URL}/api/settings`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({key: 'qr_image', value: ''}) }); fetchData(); } }} className="flex items-center gap-2 text-slate-600 hover:text-rose-600 font-bold transition-colors">
                       <Trash2 size={18} /> Xóa
                     </button>
                   </div>
