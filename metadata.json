@@ -1,0 +1,5 @@
+{
+  "name": "FundFlow - Quản lý Quỹ Đóng góp",
+  "description": "Ứng dụng quản lý quỹ nội bộ, theo dõi đóng góp hàng tháng và tạo lời nhắc thanh toán tự động.",
+  "requestFramePermissions": []
+}
